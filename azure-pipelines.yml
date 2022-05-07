@@ -14,7 +14,7 @@ variables:
   webAppName: 'bootcamp-python'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'windows-latest'
 
   # Environment name
   environmentName: 'bootcamp-python'
@@ -79,9 +79,17 @@ stages:
               versionSpec: '$(pythonVersion)'
             displayName: 'Use Python version'
 
-          - task: AzureWebApp@1
-            displayName: 'Deploy Azure Web App : bootcamp-python'
+          # - task: AzureWebApp@1
+          #   displayName: 'Deploy Azure Web App : bootcamp-python'
+          #   inputs:
+          #     azureSubscription: $(azureServiceConnectionId)
+          #     appName: $(webAppName)
+          #     package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+
+          - task: AzureRmWebAppDeployment@4
             inputs:
+              ConnectionType: 'AzureRM'
               azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              appType: 'webApp'
+              WebAppName: 'bootcamp-angular-dev'
+              packageForLinux: '$(System.DefaultWorkingDirectory)/drop/$(Build.BuildId).zip'
